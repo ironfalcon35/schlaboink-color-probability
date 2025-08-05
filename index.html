@@ -5,7 +5,7 @@
   <title>Schlaboink Breeding Simulator 🎈</title>
   <style>
     body {
-      font-family: Comic Sans MS, cursive, sans-serif;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       background: #fff8e7;
       color: #333;
       padding: 40px;
@@ -98,59 +98,59 @@
     // Format: "Parent1-Parent2": { Color: Weight, ... }
     const breedingTable = {
       // Primary + Primary
-      "Red-Red": { Red: 90, White: 10 },
+      "Red-Red": { Red: 100 },
       "Red-Yellow": { Red: 25, Yellow: 25, Orange: 50 },
       "Red-Blue": { Red: 25, Blue: 25, Purple: 50 },
 
       "Yellow-Red": { Red: 25, Yellow: 25, Orange: 50 },
-      "Yellow-Yellow": { Yellow: 90, White: 10 },
+      "Yellow-Yellow": { Yellow: 100 },
       "Yellow-Blue": { Yellow: 25, Blue: 25, Green: 50 },
 
       "Blue-Red": { Red: 25, Blue: 25, Purple: 50 },
       "Blue-Yellow": { Yellow: 25, Blue: 25, Green: 50 },
-      "Blue-Blue": { Blue: 90, White: 10 },
+      "Blue-Blue": { Blue: 100 },
 
       // Primary + Secondary
-      "Red-Green": { Red: 10, Green: 10, Blue: 5, Yellow: 5, Purple: 15, Orange: 20, White: 5, Pink: 1 },
-      "Green-Red": { Red: 10, Green: 10, Blue: 5, Yellow: 5, Purple: 15, Orange: 20, White: 5, Pink: 1 },
+      "Red-Green": { Red: 10, Green: 10, Blue: 5, Yellow: 5, Purple: 15, Orange: 15, White: 3, Pink: 1 },
+      "Green-Red": { Red: 10, Green: 10, Blue: 5, Yellow: 5, Purple: 15, Orange: 15, White: 3, Pink: 1 },
 
-      "Red-Orange": { Red: 10, Orange: 30, Yellow: 10, White: 5, Pink: 1, Purple: 10, Green: 10, Blue: 5 },
-      "Orange-Red": { Red: 10, Orange: 30, Yellow: 10, White: 5, Pink: 1, Purple: 10, Green: 10, Blue: 5 },
+      "Red-Orange": { Red: 30, Orange: 25, Yellow: 5, White: 3, Pink: 1 },
+      "Orange-Red": { Red: 30, Orange: 25, Yellow: 5, White: 3, Pink: 1 },
 
-      "Red-Purple": { Red: 10, Purple: 30, Blue: 10, White: 5, Pink: 1, Orange: 10, Yellow: 10, Green: 5 },
-      "Purple-Red": { Red: 10, Purple: 30, Blue: 10, White: 5, Pink: 1, Orange: 10, Yellow: 10, Green: 5 },
+      "Red-Purple": { Red: 30, Purple: 25, Blue: 5, White: 3, Pink: 1 },
+      "Purple-Red": { Red: 30, Purple: 25, Blue: 5, White: 3, Pink: 1 },
 
-      "Yellow-Green": { Yellow: 10, Green: 30, Blue: 10, White: 5, Pink: 1, Orange: 10, Purple: 10, Red: 5 },
-      "Green-Yellow": { Yellow: 10, Green: 30, Blue: 10, White: 5, Pink: 1, Orange: 10, Purple: 10, Red: 5 },
+      "Yellow-Green": { Yellow: 30, Green: 25, Blue: 5, White: 3, Pink: 1 },
+      "Green-Yellow": { Yellow: 30, Green: 25, Blue: 5, White: 3, Pink: 1 },
 
-      "Yellow-Orange": { Yellow: 10, Orange: 30, Red: 10, White: 5, Pink: 1, Purple: 10, Green: 10, Blue: 5 },
-      "Orange-Yellow": { Yellow: 10, Orange: 30, Red: 10, White: 5, Pink: 1, Purple: 10, Green: 10, Blue: 5 },
+      "Yellow-Orange": { Yellow: 30, Orange: 25, Red: 5, White: 3, Pink: 1 },
+      "Orange-Yellow": { Yellow: 30, Orange: 25, Red: 5, White: 3, Pink: 1 },
 
-      "Yellow-Purple": { Yellow: 10, Purple: 30, Blue: 10, White: 5, Pink: 1, Orange: 10, Green: 10, Red: 5 },
-      "Purple-Yellow": { Yellow: 10, Purple: 30, Blue: 10, White: 5, Pink: 1, Orange: 10, Green: 10, Red: 5 },
+      "Yellow-Purple": { Yellow: 10, Purple: 10, Blue: 5, White: 3, Pink: 1, Orange: 15, Green: 15, Red: 5 },
+      "Purple-Yellow": { Yellow: 10, Purple: 10, Blue: 5, White: 3, Pink: 1, Orange: 15, Green: 15, Red: 5 },
 
-      "Blue-Green": { Blue: 10, Green: 30, Yellow: 10, White: 5, Pink: 1, Orange: 10, Purple: 10, Red: 5 },
-      "Green-Blue": { Blue: 10, Green: 30, Yellow: 10, White: 5, Pink: 1, Orange: 10, Purple: 10, Red: 5 },
+      "Blue-Green": { Blue: 30, Green: 25, Yellow: 5, White: 3, Pink: 1, },
+      "Green-Blue": { Blue: 30, Green: 25, Yellow: 5, White: 3, Pink: 1, },
 
-      "Blue-Orange": { Blue: 10, Orange: 30, Red: 10, White: 5, Pink: 1, Purple: 10, Green: 10, Yellow: 5 },
-      "Orange-Blue": { Blue: 10, Orange: 30, Red: 10, White: 5, Pink: 1, Purple: 10, Green: 10, Yellow: 5 },
+      "Blue-Orange": { Blue: 10, Orange: 10, Red: 5, White: 3, Pink: 1, Purple: 15, Green: 15, Yellow: 5 },
+      "Orange-Blue": { Blue: 10, Orange: 10, Red: 5, White: 3, Pink: 1, Purple: 15, Green: 15, Yellow: 5 },
 
-      "Blue-Purple": { Blue: 10, Purple: 30, Red: 10, White: 5, Pink: 1, Orange: 10, Green: 10, Yellow: 5 },
-      "Purple-Blue": { Blue: 10, Purple: 30, Red: 10, White: 5, Pink: 1, Orange: 10, Green: 10, Yellow: 5 },
+      "Blue-Purple": { Blue: 30, Purple: 25, Red: 5, White: 3, Pink: 1, },
+      "Purple-Blue": { Blue: 30, Purple: 25, Red: 5, White: 3, Pink: 1, },
 
       // Secondary + Secondary
-      "Green-Green": { Green: 50, Blue: 15, Yellow: 15, White: 10, Pink: 1, Orange: 5, Purple: 5 },
-      "Orange-Orange": { Orange: 50, Red: 15, Yellow: 15, White: 10, Pink: 1, Purple: 5, Green: 5 },
-      "Purple-Purple": { Purple: 50, Red: 15, Blue: 15, White: 10, Pink: 1, Orange: 5, Green: 5 },
+      "Green-Green": { Green: 33, Blue: 33, Yellow: 33, White: 10, Pink: 2 },
+      "Orange-Orange": { Orange: 33, Red: 33, Yellow: 33, White: 10, Pink: 2 },
+      "Purple-Purple": { Purple: 33, Red: 33, Blue: 33, White: 10, Pink: 2 },
 
-      "Green-Orange": { Green: 20, Orange: 20, Blue: 10, Yellow: 10, Purple: 10, Red: 10, White: 5, Pink: 1 },
-      "Orange-Green": { Green: 20, Orange: 20, Blue: 10, Yellow: 10, Purple: 10, Red: 10, White: 5, Pink: 1 },
+      "Green-Orange": { Green: 25, Orange: 25, Blue: 5, Yellow: 25, Purple: 15, Red: 5, White: 8, Pink: 2 },
+      "Orange-Green": { Green: 25, Orange: 25, Blue: 5, Yellow: 25, Purple: 15, Red: 5, White: 8, Pink: 2 },
 
-      "Green-Purple": { Green: 20, Purple: 20, Blue: 10, Yellow: 10, Orange: 10, Red: 10, White: 5, Pink: 1 },
-      "Purple-Green": { Green: 20, Purple: 20, Blue: 10, Yellow: 10, Orange: 10, Red: 10, White: 5, Pink: 1 },
+      "Green-Purple": { Green: 25, Purple: 25, Blue: 25, Yellow: 5, Orange: 15, Red: 5, White: 8, Pink: 2 },
+      "Purple-Green": { Green: 25, Purple: 25, Blue: 25, Yellow: 5, Orange: 15, Red: 5, White: 8, Pink: 2 },
 
-      "Orange-Purple": { Orange: 20, Purple: 20, Red: 10, Blue: 10, Yellow: 10, Green: 10, White: 5, Pink: 1 },
-      "Purple-Orange": { Orange: 20, Purple: 20, Red: 10, Blue: 10, Yellow: 10, Green: 10, White: 5, Pink: 1 },
+      "Orange-Purple": { Orange: 25, Purple: 25, Red: 25, Blue: 5, Yellow: 5, Green: 15, White: 8, Pink: 2 },
+      "Purple-Orange": { Orange: 25, Purple: 25, Red: 25, Blue: 5, Yellow: 5, Green: 15, White: 8, Pink: 2 },
 
       // Pink combos
       "Pink-Red": { Pink: 33, Red: 44, Yellow: 11, Blue: 11 },
@@ -162,40 +162,40 @@
       "Pink-Blue": { Pink: 33, Blue: 44, Red: 11, Yellow: 11 },
       "Blue-Pink": { Pink: 33, Blue: 44, Red: 11, Yellow: 11 },
 
-      "Pink-Green": { Pink: 33, Green: 44, Blue: 11, Yellow: 11 },
-      "Green-Pink": { Pink: 33, Green: 44, Blue: 11, Yellow: 11 },
+      "Pink-Green": { Pink: 33, Green: 33, Blue: 11, Yellow: 11, Red: 11 },
+      "Green-Pink": { Pink: 33, Green: 33, Blue: 11, Yellow: 11, Red: 11 },
 
-      "Pink-Orange": { Pink: 33, Orange: 44, Red: 11, Yellow: 11 },
-      "Orange-Pink": { Pink: 33, Orange: 44, Red: 11, Yellow: 11 },
+      "Pink-Orange": { Pink: 33, Orange: 33, Red: 11, Yellow: 11, Blue: 11 },
+      "Orange-Pink": { Pink: 33, Orange: 33, Red: 11, Yellow: 11, Blue: 11 },
 
-      "Pink-Purple": { Pink: 33, Purple: 44, Red: 11, Blue: 11 },
-      "Purple-Pink": { Pink: 33, Purple: 44, Red: 11, Blue: 11 },
+      "Pink-Purple": { Pink: 33, Purple: 33, Red: 11, Blue: 11, Yellow: 11 },
+      "Purple-Pink": { Pink: 33, Purple: 33, Red: 11, Blue: 11, Yellow: 11 },
 
-      "Pink-Pink": { Pink: 80, Red: 5, Yellow: 5, Blue: 5, White: 5 },
+      "Pink-Pink": { Pink: 66, Red: 11, Yellow: 11, Blue: 11 },
 
-      "Pink-White": { Pink: 40, White: 10, Red: 10, Yellow: 10, Blue: 10, Green: 10, Orange: 5, Purple: 5 },
-      "White-Pink": { Pink: 40, White: 10, Red: 10, Yellow: 10, Blue: 10, Green: 10, Orange: 5, Purple: 5 },
+      "Pink-White": { Pink: 33, White: 33, Red: 11, Yellow: 11, Blue: 11 },
+      "White-Pink": { Pink: 33, White: 33, Red: 11, Yellow: 11, Blue: 11 },
 
       // White combos
-      "White-Red": { Red: 70, White: 10, Pink: 10, Yellow: 5, Blue: 5 },
-      "Red-White": { Red: 70, White: 10, Pink: 10, Yellow: 5, Blue: 5 },
+      "White-Red": { Red: 50, White: 50},
+      "Red-White": { Red: 50, White: 50},
 
-      "White-Yellow": { Yellow: 60, White: 10, Pink: 10, Red: 5, Blue: 5, Green: 10 },
-      "Yellow-White": { Yellow: 60, White: 10, Pink: 10, Red: 5, Blue: 5, Green: 10 },
+      "White-Yellow": { Yellow: 50, White: 50 },
+      "Yellow-White": { Yellow: 50, White: 50 },
 
-      "White-Blue": { Blue: 60, White: 10, Pink: 10, Red: 5, Yellow: 5, Green: 10 },
-      "Blue-White": { Blue: 60, White: 10, Pink: 10, Red: 5, Yellow: 5, Green: 10 },
+      "White-Blue": { Blue: 50, White: 50 },
+      "Blue-White": { Blue: 50, White: 50 },
 
-      "White-Green": { Green: 60, White: 10, Pink: 10, Blue: 5, Yellow: 5, Orange: 10 },
-      "Green-White": { Green: 60, White: 10, Pink: 10, Blue: 5, Yellow: 5, Orange: 10 },
+      "White-Green": { Green: 40, White: 50, Blue: 5, Yellow: 5 },
+      "Green-White": { Green: 40, White: 50, Blue: 5, Yellow: 5 },
 
-      "White-Orange": { Orange: 60, White: 10, Pink: 10, Red: 5, Yellow: 5, Green: 10 },
-      "Orange-White": { Orange: 60, White: 10, Pink: 10, Red: 5, Yellow: 5, Green: 10 },
+      "White-Orange": { Orange: 40, White: 50, Red: 5, Yellow: 5 },
+      "Orange-White": { Orange: 40, White: 50, Red: 5, Yellow: 5 },
 
-      "White-Purple": { Purple: 60, White: 10, Pink: 10, Red: 5, Blue: 5, Orange: 10 },
-      "Purple-White": { Purple: 60, White: 10, Pink: 10, Red: 5, Blue: 5, Orange: 10 },
+      "White-Purple": { Purple: 40, White: 50, Red: 5, Blue: 5 },
+      "Purple-White": { Purple: 40, White: 50, Red: 5, Blue: 5 },
 
-      "White-White": { White: 85, Pink: 5, Red: 3, Yellow: 3, Blue: 3, Green: 1 },
+      "White-White": { White: 100},
     };
 
     // Weighted RNG function
