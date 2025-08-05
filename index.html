@@ -1,138 +1,320 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Schlaboink Breeding Simulator</title>
+  <meta charset="UTF-8" />
+  <title>Schlaboink Breeding Simulator 🎈</title>
   <style>
     body {
-      font-family: Comic Sans MS, sans-serif;
-      text-align: center;
-      background-color: #fff8e7;
+      font-family: Comic Sans MS, cursive, sans-serif;
+      background: #fff8e7;
+      color: #333;
       padding: 40px;
+      text-align: center;
+      user-select: none;
     }
-    input, button {
+    input {
       font-size: 1.2em;
       padding: 10px;
-      margin: 10px;
+      margin: 5px;
+      width: 140px;
+      text-transform: capitalize;
+    }
+    button {
+      font-size: 1.3em;
+      padding: 10px 25px;
+      margin-top: 15px;
+      cursor: pointer;
+      background: #ffbc4b;
+      border: none;
+      border-radius: 8px;
+      box-shadow: 0 4px #d68a00;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #e6a72c;
     }
     #result {
-      font-size: 1.5em;
-      margin-top: 20px;
-    }
-    #animation {
+      margin-top: 25px;
       font-size: 2em;
-      margin-top: 20px;
-      height: 40px;
+      font-weight: 700;
+      height: 70px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
-    #chances {
-      margin-top: 10px;
-      font-size: 1.2em;
+    #probabilities {
+      margin-top: 30px;
+      font-size: 1.1em;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
+      background: #fff5d9;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 0 10px #f5d97688;
+      line-height: 1.4;
+    }
+    .color-swatch {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      margin-right: 6px;
+      border-radius: 3px;
+      vertical-align: middle;
+      box-shadow: 0 0 2px rgba(0,0,0,0.15);
     }
   </style>
 </head>
 <body>
-  <h1>🎈 Schlaboink Breeding Simulator v2 🎈</h1>
-  <p>Enter two parent Schlaboink colors to preview chances and discover their floppy destiny!</p>
-  
-  <input id="parent1" placeholder="Parent 1 color (e.g. Red)" oninput="showChances()" />
-  <input id="parent2" placeholder="Parent 2 color (e.g. Yellow)" oninput="showChances()" />
-  <button onclick="breed()">Breed!</button>
-  
-  <div id="chances"></div>
-  <div id="animation"></div>
+  <h1>🎈 Schlaboink Breeding Simulator 🎈</h1>
+  <p>Enter two parent Schlaboink colors and discover your new wiggly child!</p>
+
+  <input id="parent1" placeholder="Parent 1 color" list="colors" />
+  <input id="parent2" placeholder="Parent 2 color" list="colors" />
+  <datalist id="colors">
+    <option>Red</option><option>Yellow</option><option>Blue</option><option>Green</option><option>Orange</option><option>Purple</option><option>Pink</option><option>White</option>
+  </datalist>
+
+  <div id="probabilities"></div>
+
+  <button onclick="startBreeding()" id="breedBtn">Breed!</button>
+
   <div id="result"></div>
 
   <script>
-    const colors = ['Red', 'Yellow', 'Blue', 'Green', 'Orange', 'Purple', 'Pink', 'White'];
-
-    // --- Breeding Table: Every known pairing with weights ---
-    const breedingTable = {
-      // Primary + Primary
-      "Red-Red": { Red: 100 },
-      "Red-Yellow": { Red: 25, Yellow: 25, Orange: 50 }, 
-      "Red-Blue": { Red: 25, Blue: 25, Purple: 50},
+    const colorHex = {
+      Red: "#e63946",
+      Yellow: "#ffbe0b",
+      Blue: "#4361ee",
+      Green: "#52b788",
+      Orange: "#f3722c",
+      Purple: "#720026",
+      Pink: "#ff6f91",
+      White: "#f1faee"
     };
 
-    function getBreedingKey(p1, p2) {
-      return `${capitalize(p1)}-${capitalize(p2)}`;
-    }
+    // Comprehensive breeding table based on your specs + lore logic
+    // Format: "Parent1-Parent2": { Color: Weight, ... }
+    const breedingTable = {
+      // Primary + Primary
+      "Red-Red": { Red: 90, White: 10 },
+      "Red-Yellow": { Red: 25, Yellow: 25, Orange: 50 },
+      "Red-Blue": { Red: 25, Blue: 25, Purple: 50 },
 
-    function capitalize(str) {
-      return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-    }
+      "Yellow-Red": { Red: 25, Yellow: 25, Orange: 50 },
+      "Yellow-Yellow": { Yellow: 90, White: 10 },
+      "Yellow-Blue": { Yellow: 25, Blue: 25, Green: 50 },
 
+      "Blue-Red": { Red: 25, Blue: 25, Purple: 50 },
+      "Blue-Yellow": { Yellow: 25, Blue: 25, Green: 50 },
+      "Blue-Blue": { Blue: 90, White: 10 },
+
+      // Primary + Secondary
+      "Red-Green": { Red: 10, Green: 10, Blue: 5, Yellow: 5, Purple: 15, Orange: 20, White: 5, Pink: 1 },
+      "Green-Red": { Red: 10, Green: 10, Blue: 5, Yellow: 5, Purple: 15, Orange: 20, White: 5, Pink: 1 },
+
+      "Red-Orange": { Red: 10, Orange: 30, Yellow: 10, White: 5, Pink: 1, Purple: 10, Green: 10, Blue: 5 },
+      "Orange-Red": { Red: 10, Orange: 30, Yellow: 10, White: 5, Pink: 1, Purple: 10, Green: 10, Blue: 5 },
+
+      "Red-Purple": { Red: 10, Purple: 30, Blue: 10, White: 5, Pink: 1, Orange: 10, Yellow: 10, Green: 5 },
+      "Purple-Red": { Red: 10, Purple: 30, Blue: 10, White: 5, Pink: 1, Orange: 10, Yellow: 10, Green: 5 },
+
+      "Yellow-Green": { Yellow: 10, Green: 30, Blue: 10, White: 5, Pink: 1, Orange: 10, Purple: 10, Red: 5 },
+      "Green-Yellow": { Yellow: 10, Green: 30, Blue: 10, White: 5, Pink: 1, Orange: 10, Purple: 10, Red: 5 },
+
+      "Yellow-Orange": { Yellow: 10, Orange: 30, Red: 10, White: 5, Pink: 1, Purple: 10, Green: 10, Blue: 5 },
+      "Orange-Yellow": { Yellow: 10, Orange: 30, Red: 10, White: 5, Pink: 1, Purple: 10, Green: 10, Blue: 5 },
+
+      "Yellow-Purple": { Yellow: 10, Purple: 30, Blue: 10, White: 5, Pink: 1, Orange: 10, Green: 10, Red: 5 },
+      "Purple-Yellow": { Yellow: 10, Purple: 30, Blue: 10, White: 5, Pink: 1, Orange: 10, Green: 10, Red: 5 },
+
+      "Blue-Green": { Blue: 10, Green: 30, Yellow: 10, White: 5, Pink: 1, Orange: 10, Purple: 10, Red: 5 },
+      "Green-Blue": { Blue: 10, Green: 30, Yellow: 10, White: 5, Pink: 1, Orange: 10, Purple: 10, Red: 5 },
+
+      "Blue-Orange": { Blue: 10, Orange: 30, Red: 10, White: 5, Pink: 1, Purple: 10, Green: 10, Yellow: 5 },
+      "Orange-Blue": { Blue: 10, Orange: 30, Red: 10, White: 5, Pink: 1, Purple: 10, Green: 10, Yellow: 5 },
+
+      "Blue-Purple": { Blue: 10, Purple: 30, Red: 10, White: 5, Pink: 1, Orange: 10, Green: 10, Yellow: 5 },
+      "Purple-Blue": { Blue: 10, Purple: 30, Red: 10, White: 5, Pink: 1, Orange: 10, Green: 10, Yellow: 5 },
+
+      // Secondary + Secondary
+      "Green-Green": { Green: 50, Blue: 15, Yellow: 15, White: 10, Pink: 1, Orange: 5, Purple: 5 },
+      "Orange-Orange": { Orange: 50, Red: 15, Yellow: 15, White: 10, Pink: 1, Purple: 5, Green: 5 },
+      "Purple-Purple": { Purple: 50, Red: 15, Blue: 15, White: 10, Pink: 1, Orange: 5, Green: 5 },
+
+      "Green-Orange": { Green: 20, Orange: 20, Blue: 10, Yellow: 10, Purple: 10, Red: 10, White: 5, Pink: 1 },
+      "Orange-Green": { Green: 20, Orange: 20, Blue: 10, Yellow: 10, Purple: 10, Red: 10, White: 5, Pink: 1 },
+
+      "Green-Purple": { Green: 20, Purple: 20, Blue: 10, Yellow: 10, Orange: 10, Red: 10, White: 5, Pink: 1 },
+      "Purple-Green": { Green: 20, Purple: 20, Blue: 10, Yellow: 10, Orange: 10, Red: 10, White: 5, Pink: 1 },
+
+      "Orange-Purple": { Orange: 20, Purple: 20, Red: 10, Blue: 10, Yellow: 10, Green: 10, White: 5, Pink: 1 },
+      "Purple-Orange": { Orange: 20, Purple: 20, Red: 10, Blue: 10, Yellow: 10, Green: 10, White: 5, Pink: 1 },
+
+      // Pink combos
+      "Pink-Red": { Pink: 33, Red: 44, Yellow: 11, Blue: 11 },
+      "Red-Pink": { Pink: 33, Red: 44, Yellow: 11, Blue: 11 },
+
+      "Pink-Yellow": { Pink: 33, Yellow: 44, Red: 11, Blue: 11 },
+      "Yellow-Pink": { Pink: 33, Yellow: 44, Red: 11, Blue: 11 },
+
+      "Pink-Blue": { Pink: 33, Blue: 44, Red: 11, Yellow: 11 },
+      "Blue-Pink": { Pink: 33, Blue: 44, Red: 11, Yellow: 11 },
+
+      "Pink-Green": { Pink: 33, Green: 44, Blue: 11, Yellow: 11 },
+      "Green-Pink": { Pink: 33, Green: 44, Blue: 11, Yellow: 11 },
+
+      "Pink-Orange": { Pink: 33, Orange: 44, Red: 11, Yellow: 11 },
+      "Orange-Pink": { Pink: 33, Orange: 44, Red: 11, Yellow: 11 },
+
+      "Pink-Purple": { Pink: 33, Purple: 44, Red: 11, Blue: 11 },
+      "Purple-Pink": { Pink: 33, Purple: 44, Red: 11, Blue: 11 },
+
+      "Pink-Pink": { Pink: 80, Red: 5, Yellow: 5, Blue: 5, White: 5 },
+
+      "Pink-White": { Pink: 40, White: 10, Red: 10, Yellow: 10, Blue: 10, Green: 10, Orange: 5, Purple: 5 },
+      "White-Pink": { Pink: 40, White: 10, Red: 10, Yellow: 10, Blue: 10, Green: 10, Orange: 5, Purple: 5 },
+
+      // White combos
+      "White-Red": { Red: 70, White: 10, Pink: 10, Yellow: 5, Blue: 5 },
+      "Red-White": { Red: 70, White: 10, Pink: 10, Yellow: 5, Blue: 5 },
+
+      "White-Yellow": { Yellow: 60, White: 10, Pink: 10, Red: 5, Blue: 5, Green: 10 },
+      "Yellow-White": { Yellow: 60, White: 10, Pink: 10, Red: 5, Blue: 5, Green: 10 },
+
+      "White-Blue": { Blue: 60, White: 10, Pink: 10, Red: 5, Yellow: 5, Green: 10 },
+      "Blue-White": { Blue: 60, White: 10, Pink: 10, Red: 5, Yellow: 5, Green: 10 },
+
+      "White-Green": { Green: 60, White: 10, Pink: 10, Blue: 5, Yellow: 5, Orange: 10 },
+      "Green-White": { Green: 60, White: 10, Pink: 10, Blue: 5, Yellow: 5, Orange: 10 },
+
+      "White-Orange": { Orange: 60, White: 10, Pink: 10, Red: 5, Yellow: 5, Green: 10 },
+      "Orange-White": { Orange: 60, White: 10, Pink: 10, Red: 5, Yellow: 5, Green: 10 },
+
+      "White-Purple": { Purple: 60, White: 10, Pink: 10, Red: 5, Blue: 5, Orange: 10 },
+      "Purple-White": { Purple: 60, White: 10, Pink: 10, Red: 5, Blue: 5, Orange: 10 },
+
+      "White-White": { White: 85, Pink: 5, Red: 3, Yellow: 3, Blue: 3, Green: 1 },
+    };
+
+    // Weighted RNG function
     function getRandomWeightedChoice(weightedOptions) {
       let totalWeight = 0;
-      for (let color in weightedOptions) {
+      for (const color in weightedOptions) {
         totalWeight += weightedOptions[color];
       }
-
       let rand = Math.random() * totalWeight;
       let cumulative = 0;
-
-      for (let color in weightedOptions) {
+      for (const color in weightedOptions) {
         cumulative += weightedOptions[color];
         if (rand <= cumulative) {
           return color;
         }
       }
+      // fallback (should never happen)
+      return Object.keys(weightedOptions)[0];
     }
 
-    function showChances() {
-      const parent1 = capitalize(document.getElementById("parent1").value.trim());
-      const parent2 = capitalize(document.getElementById("parent2").value.trim());
-      const key = getBreedingKey(parent1, parent2);
-
-      let table = breedingTable[key];
-      if (!table) {
-        const reversedKey = getBreedingKey(parent2, parent1);
-        table = breedingTable[reversedKey];
-      }
-
-      if (table) {
-        const chanceText = Object.entries(table).map(
-          ([color, weight]) => `${color}: ${(weight)}%`
-        ).join('<br>');
-        document.getElementById("chances").innerHTML = `<b>Chances:</b><br>${chanceText}`;
-      } else {
-        document.getElementById("chances").innerHTML = `⚠️ Unknown pairing. Add it to the table!`;
-      }
-
-      document.getElementById("result").innerHTML = "";
-      document.getElementById("animation").innerHTML = "";
+    // Capitalize input for consistency
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
     }
 
-    function breed() {
-      const parent1 = capitalize(document.getElementById("parent1").value.trim());
-      const parent2 = capitalize(document.getElementById("parent2").value.trim());
-      const key = getBreedingKey(parent1, parent2);
-      const reversedKey = getBreedingKey(parent2, parent1);
-
-      let table = breedingTable[key] || breedingTable[reversedKey];
-
+    // Show probability table for current input
+    function showProbabilities(p1, p2) {
+      const key = `${p1}-${p2}`;
+      const table = breedingTable[key];
+      const container = document.getElementById("probabilities");
       if (!table) {
-        document.getElementById("result").innerHTML = "🤷‍♀️ Unknown pairing!";
+        container.innerHTML = `<i>No known breeding data for "${p1}" + "${p2}".</i>`;
+        return false;
+      }
+      let html = "<b>Possible offspring colors and chances:</b><br><br>";
+      for (const [color, weight] of Object.entries(table)) {
+        const total = Object.values(table).reduce((a,b) => a+b, 0);
+        const percent = ((weight / total) * 100).toFixed(1);
+        html += `<span class="color-swatch" style="background:${colorHex[color] || '#ccc'}"></span> <b>${color}</b>: ${percent}%<br>`;
+      }
+      container.innerHTML = html;
+      return true;
+    }
+
+    // Animation logic
+    let animInterval = null;
+    function animateSelection(options, finalColor) {
+      const resultDiv = document.getElementById("result");
+      let i = 0;
+      let speed = 50; // ms between flips
+      let flips = 0;
+      const maxFlips = 30;
+
+      clearInterval(animInterval);
+      animInterval = setInterval(() => {
+        // Show cycling color & name
+        const color = options[i % options.length];
+        resultDiv.style.color = colorHex[color] || "#000";
+        resultDiv.textContent = color;
+        i++;
+        flips++;
+
+        // Gradually slow down the speed
+        if (flips > maxFlips * 0.7) speed += 15;
+        if (flips > maxFlips) {
+          clearInterval(animInterval);
+          // Show final color with nice formatting
+          resultDiv.innerHTML = `🎉 Your Schlaboink is <span style="color:${colorHex[finalColor] || '#000'};"><b>${finalColor}</b></span>! 🎉`;
+        }
+      }, speed);
+    }
+
+    function startBreeding() {
+      const p1 = capitalize(document.getElementById("parent1").value.trim());
+      const p2 = capitalize(document.getElementById("parent2").value.trim());
+
+      if (!p1 || !p2) {
+        alert("Please enter both parent colors!");
         return;
       }
 
-      const possibleColors = Object.keys(table);
-      let spinIndex = 0;
-      let spinTime = 0;
-      let maxSpinTime = 2000 + Math.random() * 1000; // total spin duration 2–3s
+      if (!showProbabilities(p1, p2)) {
+        document.getElementById("result").textContent = "";
+        return;
+      }
 
-      const spinInterval = setInterval(() => {
-        document.getElementById("animation").innerHTML = `🎡 Spinning: <b>${possibleColors[spinIndex % possibleColors.length]}</b>`;
-        spinIndex++;
-        spinTime += 100;
+      const key = `${p1}-${p2}`;
+      const optionsTable = breedingTable[key];
+      if (!optionsTable) {
+        document.getElementById("result").textContent = "🤷‍♂️ No data for this pairing!";
+        return;
+      }
 
-        if (spinTime >= maxSpinTime) {
-          clearInterval(spinInterval);
-          const babyColor = getRandomWeightedChoice(table);
-          document.getElementById("animation").innerHTML = "";
-          document.getElementById("result").innerHTML = `🎉 Your Schlaboink is <b>${babyColor}</b>! 🎉`;
+      // Prepare array of possible colors repeated by weight for RNG simulation in animation
+      let colorPool = [];
+      for (const color in optionsTable) {
+        for (let i = 0; i < optionsTable[color]; i++) {
+          colorPool.push(color);
         }
-      }, 100);
+      }
+
+      // Pick final color from weighted RNG
+      const finalColor = getRandomWeightedChoice(optionsTable);
+
+      // Animate the color cycling then show final color
+      animateSelection([...new Set(colorPool)], finalColor);
     }
+
+    // Show probabilities on input change for instant feedback
+    document.getElementById("parent1").addEventListener("input", () => {
+      const p1 = capitalize(document.getElementById("parent1").value.trim());
+      const p2 = capitalize(document.getElementById("parent2").value.trim());
+      showProbabilities(p1, p2);
+    });
+    document.getElementById("parent2").addEventListener("input", () => {
+      const p1 = capitalize(document.getElementById("parent1").value.trim());
+      const p2 = capitalize(document.getElementById("parent2").value.trim());
+      showProbabilities(p1, p2);
+    });
   </script>
 </body>
 </html>
