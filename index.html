@@ -68,7 +68,7 @@
 </head>
 <body>
   <h1>🎈 Schlaboink Breeding Simulator 🎈</h1>
-  <p>Enter two parent Schlaboink colors and discover your new wiggly child!</p>
+  <p>Enter two parent Schlaboink colors and discover your new child's color!</p>
 
   <input id="parent1" placeholder="Parent 1 color" list="colors" />
   <input id="parent2" placeholder="Parent 2 color" list="colors" />
@@ -89,12 +89,11 @@
       Blue: "#4361ee",
       Green: "#52b788",
       Orange: "#f3722c",
-      Purple: "#720026",
+      Purple: "#A020F0",
       Pink: "#ff6f91",
       White: "#f1faee"
     };
 
-    // Comprehensive breeding table based on your specs + lore logic
     // Format: "Parent1-Parent2": { Color: Weight, ... }
     const breedingTable = {
       // Primary + Primary
@@ -212,7 +211,7 @@
           return color;
         }
       }
-      // fallback (should never happen)
+      // fallback 
       return Object.keys(weightedOptions)[0];
     }
 
@@ -258,12 +257,12 @@
         i++;
         flips++;
 
-        // Gradually slow down the speed
+        // Gradual speed slower
         if (flips > maxFlips * 0.7) speed += 15;
         if (flips > maxFlips) {
           clearInterval(animInterval);
           // Show final color with nice formatting
-          resultDiv.innerHTML = `🎉 Your Schlaboink is <span style="color:${colorHex[finalColor] || '#000'};"><b>${finalColor}</b></span>! 🎉`;
+          resultDiv.innerHTML = `🎉 Your Schlaboink is  <span style="color:${colorHex[finalColor] || '#000'};"><b>${finalColor}</b></span>! 🎉`;
         }
       }, speed);
     }
@@ -285,7 +284,7 @@
       const key = `${p1}-${p2}`;
       const optionsTable = breedingTable[key];
       if (!optionsTable) {
-        document.getElementById("result").textContent = "🤷‍♂️ No data for this pairing!";
+        document.getElementById("result").textContent = "⍰ No data for this pairing!";
         return;
       }
 
