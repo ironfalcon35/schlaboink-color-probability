@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Schlaboink Breeding Simulator</title>
+  <style>
+    body {
+      font-family: Comic Sans MS, sans-serif;
+      text-align: center;
+      background-color: #fff8e7;
+      padding: 40px;
+    }
+    input, button {
+      font-size: 1.2em;
+      padding: 10px;
+      margin: 10px;
+    }
+    #result {
+      font-size: 1.5em;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎈 Schlaboink Breeding Simulator 🎈</h1>
+  <p>Enter two parent Schlaboink colors and discover your new wiggly child!</p>
+  
+  <input id="parent1" placeholder="Parent 1 color (e.g. Red)" />
+  <input id="parent2" placeholder="Parent 2 color (e.g. Yellow)" />
+  <button onclick="breed()">Breed!</button>
+  
+  <div id="result"></div>
+
+  <script>
+    const breedingTable = {
+      // Format: "Parent1-Parent2": {Color: Weight, ...}
+      
+      "Red-Yellow": { Red: 25, Yellow: 25, Orange: 50 },
+      "Yellow-Red": { Red: 25, Yellow: 25, Orange: 50 },
+
+      "Red-Blue": { Red: 25, Blue: 25, Purple: 50 },
+      "Blue-Red": { Red: 25, Blue: 25, Purple: 50 },
+
+      "Blue-Yellow": { Blue: 25, Yellow: 25, Green: 50 },
+      "Yellow-Blue": { Blue: 25, Yellow: 25, Green: 50 },
+
+      "Pink-Red": { Pink: 33, Red: 44, Yellow: 11, Blue: 11 },
+      "Red-Pink": { Pink: 33, Red: 44, Yellow: 11, Blue: 11 },
+
+      "Red-Green": { Red: 10, Green: 10, Blue: 5, Yellow: 5, Purple: 20, Orange: 20, White: 5, Pink: 1 },
+      "Green-Red": { Red: 10, Green: 10, Blue: 5, Yellow: 5, Purple: 20, Orange: 20, White: 5, Pink: 1 },
+
+      "White-Red": { Red: 70, White: 10, Pink: 10, Yellow: 5, Blue: 5 },
+      "Red-White": { Red: 70, White: 10, Pink: 10, Yellow: 5, Blue: 5 },
+
+      "White-Yellow": { Yellow: 60, White: 10, Pink: 10, Red: 5, Blue: 5, Green: 10 },
+      "Yellow-White": { Yellow: 60, White: 10, Pink: 10, Red: 5, Blue: 5, Green: 10 },
+
+      "White-Pink": { Pink: 40, White: 10, Red: 10, Yellow: 10, Blue: 10, Green: 10, Orange: 5, Purple: 5 },
+
+      "Pink-Yellow": { Pink: 33, Yellow: 44, Red: 11, Blue: 11 },
+      "Yellow-Pink": { Pink: 33, Yellow: 44, Red: 11, Blue: 11 },
+
+      // Add more pairings here!
+    };
+
+    function getRandomWeightedChoice(weightedOptions) {
+      let totalWeight = 0;
+      for (let color in weightedOptions) {
+        totalWeight += weightedOptions[color];
+      }
+
+      let rand = Math.random() * totalWeight;
+      let cumulative = 0;
+
+      for (let color in weightedOptions) {
+        cumulative += weightedOptions[color];
+        if (rand <= cumulative) {
+          return color;
+        }
+      }
+    }
+
+    function breed() {
+      const parent1 = capitalize(document.getElementById("parent1").value.trim());
+      const parent2 = capitalize(document.getElementById("parent2").value.trim());
+      const key = `${parent1}-${parent2}`;
+
+      if (breedingTable[key]) {
+        const babyColor = getRandomWeightedChoice(breedingTable[key]);
+        document.getElementById("result").innerHTML = `🎉 Your Schlaboink is <b>${babyColor}</b>! 🎉`;
+      } else {
+        document.getElementById("result").innerHTML = "🤷‍♀️ No known breeding data for this pairing!";
+      }
+    }
+
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+    }
+  </script>
+</body>
+</html>
