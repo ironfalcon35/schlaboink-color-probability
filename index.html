@@ -19,83 +19,132 @@
       font-size: 1.5em;
       margin-top: 20px;
     }
+    #chances {
+      margin-top: 20px;
+      font-family: monospace;
+    }
   </style>
 </head>
 <body>
-  <h1>🎈 Schlaboink Breeding Simulator 🎈</h1>
-  <p>Enter two parent Schlaboink colors and discover your new wiggly child!</p>
-  
-  <input id="parent1" placeholder="Parent 1 color (e.g. Red)" />
-  <input id="parent2" placeholder="Parent 2 color (e.g. Yellow)" />
+  <h1>🎈 Schlaboink Breeding Simulator v2 🎈</h1>
+  <p>Enter two parent Schlaboink colors and discover your new squishy heir.</p>
+
+  <input id="parent1" placeholder="Parent 1 (e.g. Red)" />
+  <input id="parent2" placeholder="Parent 2 (e.g. Yellow)" oninput="showChances()" />
   <button onclick="breed()">Breed!</button>
-  
+
+  <div id="chances"></div>
   <div id="result"></div>
 
   <script>
+    const allColors = ["Red", "Yellow", "Blue", "Green", "Orange", "Purple", "Pink", "White"];
+
     const breedingTable = {
-      // Format: "Parent1-Parent2": {Color: Weight, ...}
-      
+      // Primary + Primary
       "Red-Yellow": { Red: 25, Yellow: 25, Orange: 50 },
       "Yellow-Red": { Red: 25, Yellow: 25, Orange: 50 },
-
       "Red-Blue": { Red: 25, Blue: 25, Purple: 50 },
       "Blue-Red": { Red: 25, Blue: 25, Purple: 50 },
-
       "Blue-Yellow": { Blue: 25, Yellow: 25, Green: 50 },
       "Yellow-Blue": { Blue: 25, Yellow: 25, Green: 50 },
 
+      // Pink + Primary
       "Pink-Red": { Pink: 33, Red: 44, Yellow: 11, Blue: 11 },
       "Red-Pink": { Pink: 33, Red: 44, Yellow: 11, Blue: 11 },
-
-      "Red-Green": { Red: 10, Green: 10, Blue: 5, Yellow: 5, Purple: 20, Orange: 20, White: 5, Pink: 1 },
-      "Green-Red": { Red: 10, Green: 10, Blue: 5, Yellow: 5, Purple: 20, Orange: 20, White: 5, Pink: 1 },
-
-      "White-Red": { Red: 70, White: 10, Pink: 10, Yellow: 5, Blue: 5 },
-      "Red-White": { Red: 70, White: 10, Pink: 10, Yellow: 5, Blue: 5 },
-
-      "White-Yellow": { Yellow: 60, White: 10, Pink: 10, Red: 5, Blue: 5, Green: 10 },
-      "Yellow-White": { Yellow: 60, White: 10, Pink: 10, Red: 5, Blue: 5, Green: 10 },
-
-      "White-Pink": { Pink: 40, White: 10, Red: 10, Yellow: 10, Blue: 10, Green: 10, Orange: 5, Purple: 5 },
-
       "Pink-Yellow": { Pink: 33, Yellow: 44, Red: 11, Blue: 11 },
       "Yellow-Pink": { Pink: 33, Yellow: 44, Red: 11, Blue: 11 },
 
-      // Add more pairings here!
+      // Red + Green (example secondary mix)
+      "Red-Green": { Red: 10, Green: 10, Blue: 5, Yellow: 5, Purple: 20, Orange: 20, White: 5, Pink: 1 },
+      "Green-Red": { Red: 10, Green: 10, Blue: 5, Yellow: 5, Purple: 20, Orange: 20, White: 5, Pink: 1 },
+
+      // White combos
+      "White-Red": { Red: 70, White: 10, Pink: 10, Yellow: 5, Blue: 5 },
+      "Red-White": { Red: 70, White: 10, Pink: 10, Yellow: 5, Blue: 5 },
+      "White-Yellow": { Yellow: 60, White: 10, Pink: 10, Red: 5, Blue: 5, Green: 10 },
+      "Yellow-White": { Yellow: 60, White: 10, Pink: 10, Red: 5, Blue: 5, Green: 10 },
+      "White-Pink": { Pink: 40, White: 10, Red: 10, Yellow: 10, Blue: 10, Green: 10, Orange: 5, Purple: 5 },
+      "Pink-White": { Pink: 40, White: 10, Red: 10, Yellow: 10, Blue: 10, Green: 10, Orange: 5, Purple: 5 },
+
+      // Pink + Pink
+      "Pink-Pink": { Pink: 50, Red: 10, Yellow: 10, Blue: 10, White: 10, Orange: 5, Purple: 5 },
+
+      // White + White
+      "White-White": { Red: 15, Yellow: 15, Blue: 15, Green: 10, Orange: 10, Purple: 10, Pink: 15, White: 10 },
+
+      // Same-color = high self, mutation chance
+      ...Object.fromEntries(allColors.map(c => [`${c}-${c}`, { [c]: 90, Mutation: 10 }])),
+
+      // Secondary + Secondary default
+      "Orange-Purple": { Orange: 20, Purple: 20, Red: 20, Yellow: 10, Blue: 10, White: 10, Pink: 2 },
+      "Purple-Orange": { Orange: 20, Purple: 20, Red: 20, Yellow: 10, Blue: 10, White: 10, Pink: 2 },
+      "Green-Orange": { Green: 20, Orange: 20, Yellow: 20, Blue: 10, Red: 10, White: 10, Pink: 2 },
+      "Orange-Green": { Green: 20, Orange: 20, Yellow: 20, Blue: 10, Red: 10, White: 10, Pink: 2 },
     };
 
-    function getRandomWeightedChoice(weightedOptions) {
-      let totalWeight = 0;
-      for (let color in weightedOptions) {
-        totalWeight += weightedOptions[color];
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+    }
+
+    function showChances() {
+      const p1 = capitalize(document.getElementById("parent1").value.trim());
+      const p2 = capitalize(document.getElementById("parent2").value.trim());
+      const key = `${p1}-${p2}`;
+
+      if (breedingTable[key]) {
+        const options = breedingTable[key];
+        let display = "<b>Possible Outcomes:</b><br>";
+        for (let color in options) {
+          display += `${color}: ${options[color]}%<br>`;
+        }
+        document.getElementById("chances").innerHTML = display;
+      } else {
+        document.getElementById("chances").innerHTML = "No known breeding data for this combo!";
+      }
+    }
+
+    function getRandomWeightedChoice(options) {
+      let total = 0;
+      for (let color in options) {
+        total += options[color];
       }
 
-      let rand = Math.random() * totalWeight;
+      const rand = Math.random() * total;
       let cumulative = 0;
 
-      for (let color in weightedOptions) {
-        cumulative += weightedOptions[color];
-        if (rand <= cumulative) {
-          return color;
-        }
+      for (let color in options) {
+        cumulative += options[color];
+        if (rand <= cumulative) return color;
       }
     }
 
     function breed() {
-      const parent1 = capitalize(document.getElementById("parent1").value.trim());
-      const parent2 = capitalize(document.getElementById("parent2").value.trim());
-      const key = `${parent1}-${parent2}`;
+      const p1 = capitalize(document.getElementById("parent1").value.trim());
+      const p2 = capitalize(document.getElementById("parent2").value.trim());
+      const key = `${p1}-${p2}`;
 
-      if (breedingTable[key]) {
-        const babyColor = getRandomWeightedChoice(breedingTable[key]);
-        document.getElementById("result").innerHTML = `🎉 Your Schlaboink is <b>${babyColor}</b>! 🎉`;
-      } else {
-        document.getElementById("result").innerHTML = "🤷‍♀️ No known breeding data for this pairing!";
+      if (!breedingTable[key]) {
+        document.getElementById("result").innerHTML = "😢 No breeding table found for that combo!";
+        return;
       }
-    }
 
-    function capitalize(str) {
-      return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+      const options = breedingTable[key];
+      const possibleColors = Object.keys(options);
+
+      let flashCount = 0;
+      const flashLimit = 15;
+      const flashInterval = 100;
+
+      const interval = setInterval(() => {
+        const randomColor = possibleColors[Math.floor(Math.random() * possibleColors.length)];
+        document.getElementById("result").innerHTML = `🎲 Rolling... ${randomColor}`;
+        flashCount++;
+        if (flashCount >= flashLimit) {
+          clearInterval(interval);
+          const finalColor = getRandomWeightedChoice(options);
+          document.getElementById("result").innerHTML = `🎉 Your Schlaboink is <b>${finalColor}</b>! 🎉`;
+        }
+      }, flashInterval);
     }
   </script>
 </body>
