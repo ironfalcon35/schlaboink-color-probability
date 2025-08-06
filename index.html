@@ -89,6 +89,8 @@
   <div id="result"></div>
 
   <p id="mutation"></p>
+  <p id="mutation-type"></p>
+  <p id="mutation-description"></p>
 
   <script>
     const colorHex = {
@@ -205,6 +207,22 @@
       "White-White": { White: 100},
     };
 
+    const mutationTable = {
+        "Typical": {
+            "001": 1,
+            "002": 1,
+            "003": 1,
+            "004": 1,
+            "005": 1,
+            "006": 1,
+            "007": 1,
+            "008": 1,
+            "009": 1,
+            "010": 1,
+            "011": 1
+        }
+    }
+
     // Weighted RNG function
     function getRandomWeightedChoice(weightedOptions) {
       let totalWeight = 0;
@@ -289,11 +307,33 @@
 
     function checkForMutation() {
         const mutation = document.getElementById("mutation");
-        if (Math.random() < (1/12)) {
+        if (Math.random() < (1)) {
             mutation.innerHTML = `There is a mutation!`;
+            const mutationType = getRandomWeightedChoice(mutationTable["Typical"]);
+            setTimeout(() => applyMutation(mutationType, mutation), 1000)
         } else {
-            mutation.innerHTML = "No mutation!";
+            mutation.innerHTML = "No mutation! :)";
         }
+    }
+
+    function applyMutation(mutationType, element) {
+        types = ["001", "002", "003", "004", "005", "006", "007", "008", "009", "010", "011"];
+        element.innerHTML = mutationType;
+        let i = 0;
+        let max = 100;
+        let speed = 50;
+        clearInterval(animInterval);
+        animInterval = setInterval(() => {
+            element.innerHTML = types[i % types.length];
+            i++;
+            if (i > max) {
+                clearInterval(animInterval);
+                element.innerHTML = "The selected mutation type is: " + mutationType;
+            }
+            if (i > max * 0.7) {
+                speed *= 1.5;
+            }
+        }, 50)
     }
 
     function startBreeding() {
