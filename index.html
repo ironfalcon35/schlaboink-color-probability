@@ -307,7 +307,7 @@
 
     function checkForMutation() {
         const mutation = document.getElementById("mutation");
-        if (Math.random() < (1)) {
+        if (Math.random() < (1/12)) {
             mutation.innerHTML = `There is a mutation!`;
             const mutationType = getRandomWeightedChoice(mutationTable["Typical"]);
             setTimeout(() => applyMutation(mutationType, mutation), 1000)
