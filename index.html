@@ -71,6 +71,18 @@
         font-size: 2em;
         font-weight: 700;
     }
+
+    #mutation-description {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 2em;
+        font-weight: 700;
+    }
+
+    #mutation-type {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 2em;
+        font-weight: 700;
+    }
   </style>
 </head>
 <body>
@@ -225,6 +237,20 @@
         }
     }
 
+    const mutationDesc = {
+        "001": "Undersized (Codename \"Mini\")",
+        "002": "Rodent-Headed (Codename \"Rathead\")",
+        "003": "Overextended Body (Codename \"Stretch\")",
+        "004": "Macrocephalic (Codename \"Stevie\")",
+        "005": "Microcephalic (Codename \"Pinhead\")",
+        "006": "Limbless (Codename \"Sperm Baby\")",
+        "007": "Lopsided (Codename \"Tiltwalker\")",
+        "008": "Neck-Extended (Codename \"Giraffoid\")",
+        "009": "Twin-Bearing (Codename \"Aphrodite\")",
+        "010": "No Face (Codename \"Blank\")",
+        "011": "Mutant Hybrid (Codename \"Stacked\")"
+    }
+
     // Weighted RNG function
     function getRandomWeightedChoice(weightedOptions) {
       let totalWeight = 0;
@@ -296,20 +322,25 @@
                 setTimeout(()=>{
                     document.getElementById("mutation").innerHTML = `..`;
                     setTimeout(()=>{
-                        document.getElementById("mutation").innerHTML = `...`;
-                        setTimeout(checkForMutation, 1000);
-                    }, 1000);
-                }, 1000);
-            }, 1000);
+                        if (Math.random() < (1/12)) {
+                            document.getElementById("mutation").innerHTML = `..!`;
+                            setTimeout(() => checkForMutation(true), 1000);
+                        } else {
+                            document.getElementById("mutation").innerHTML = "...";
+                            setTimeout(() => checkForMutation(false), 1000);
+                        }
+                    }, 500);
+                }, 500);
+            }, 500);
         }
       }, speed);
 
 
     }
 
-    function checkForMutation() {
+    function checkForMutation(isMutated) {
         const mutation = document.getElementById("mutation");
-        if (Math.random() < (1/12)) {
+        if (isMutated) {
             mutation.innerHTML = `There is a mutation!`;
             const mutationType = getRandomWeightedChoice(mutationTable["Typical"]);
             setTimeout(() => applyMutation(mutationType, mutation), 1000)
@@ -326,11 +357,14 @@
         let speed = 50;
         clearInterval(animInterval);
         animInterval = setInterval(() => {
-            element.innerHTML = types[i % types.length];
+            element.innerHTML = types[Math.floor(Math.random() * 11)];
             i++;
             if (i > max) {
                 clearInterval(animInterval);
                 element.innerHTML = "The selected mutation type is: " + mutationType;
+                setTimeout(() => {
+                    document.getElementById("mutation-description").innerHTML = mutationDesc[mutationType];
+                }, 500)
             }
             if (i > max * 0.7) {
                 speed *= 1.5;
@@ -343,6 +377,8 @@
       const p2 = capitalize(document.getElementById("parent2").value.trim());
 
       document.getElementById("mutation").innerHTML = ``;
+      document.getElementById("mutation-type").innerHTML = "";
+      document.getElementById("mutation-description").innerHTML = "";
 
       if (!p1 || !p2) {
         alert("Please enter both parent colors!");
